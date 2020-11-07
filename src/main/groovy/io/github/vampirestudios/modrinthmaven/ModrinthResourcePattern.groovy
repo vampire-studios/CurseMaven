@@ -4,7 +4,7 @@ package io.github.vampirestudios.modrinthmaven
 import org.gradle.api.internal.artifacts.repositories.resolver.M2ResourcePattern
 import org.gradle.api.internal.artifacts.repositories.resolver.MavenPattern
 
-import com.google.gson.*;
+import com.google.gson.*
 
 /**
  * The pattern that's used to take in the file id of the modrinth file,
@@ -34,12 +34,9 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     @Override
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
-        println("Oh?")
-        println(attributes.entrySet().toString())
         if(attributes.get("organisation") == "modrinth.maven") {
-            println("Modrinth!")
             try {
-                Optional<String> result = getExtension(attributes.get("module"))
+                Optional<String> result = getExtension(attributes.get("module"), attributes.get("revision"))
                 if(result.isPresent()) {
                     return result.get()
                 }
@@ -56,11 +53,11 @@ class ModrinthResourcePattern extends M2ResourcePattern {
      * @param versionId the project slug if {@code group} is `modrinth.maven`, or the project id if it's `modrinth.maven.id`
      * @return the extension for the given artifacts.
      */
-    static Optional<String> getExtension(String versionId) {
-        println("Extension: $versionId")
+    static Optional<String> getExtension(String modId, String versionId) {
+        println("Extension: $modId $versionId")
 
         //Gets the cache key for this object. the classifier can be null, hence why Objects.toString is used.
-        def cacheKey = versionId
+        def cacheKey = "$modId:$versionId"
 
         //If the cache exists, return it
         def cache = EXTENSION_CACHE.get(cacheKey)
@@ -68,11 +65,30 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             return Optional.of(cache)
         }
 
+        def modJson = new URL("https://api.modrinth.com/api/v1/mod/").text
+        if (modJson.isEmpty()) {
+            throw new IllegalArgumentException("Mod ID is invalid. ModId: $modId")
+        }
+        JsonObject modJsonObject = GSON.fromJson(modJson, JsonObject.class)
+        JsonArray fileList = modJsonObject.getAsJsonArray("versions")
+        boolean contains = false;
+        fileList.forEach({ jsonElement ->
+            if (versionId == jsonElement.asString) {
+                contains = true
+            }
+        })
+
+        if (!contains) {
+            throw new IllegalArgumentException("Can't find Version ID in Version List of Mod ID. VersionId: $versionId, ModId: $modId")
+        }
+
         def fileJson = new URL("https://api.modrinth.com/api/v1/version/$versionId").text
         JsonObject fileJsonObject = GSON.fromJson(fileJson, JsonObject.class)
         JsonObject fileInfo = fileJsonObject.getAsJsonArray("files").get(0) as JsonObject
         //Get the normal jar result. This should never be empty.
-        def result = new URL(fileInfo.get("url").getAsString()).text
+        def url = fileInfo.get("url").getAsString()
+        println(url)
+        def result = new URL(url).text
         if(result.isEmpty()) {
             throw new IllegalArgumentException("Version ID is invalid. VersionId: '$versionId'")
         }
@@ -105,7 +121,6 @@ class ModrinthResourcePattern extends M2ResourcePattern {
 //                return Optional.empty()
 //            }
 //        }
-        println("Result: $result")
 
         EXTENSION_CACHE.put(cacheKey, result)
         Optional.ofNullable(result)
