@@ -34,9 +34,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     @Override
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
-        //Regarding the reversion regex matcher, this can occur when other plugins deobfuscate the dependency and put it in their own repo. IE forge gradle.
-        def matcher = attributes.get("revision") =~ /^\d+/
-        if(attributes.get("organisation") == "modrinth.maven" && matcher.find()) {
+        if(attributes.get("organisation") == "modrinth.maven") {
             try {
                 Optional<String> result = getExtension(attributes.get("module"))
                 if(result.isPresent()) {
