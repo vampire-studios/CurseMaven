@@ -3,10 +3,8 @@ package io.github.vampirestudios.modrinthmaven
 
 import org.gradle.api.internal.artifacts.repositories.resolver.M2ResourcePattern
 import org.gradle.api.internal.artifacts.repositories.resolver.MavenPattern
-import org.gradle.internal.impldep.com.google.gson.Gson
-import org.gradle.internal.impldep.com.google.gson.GsonBuilder
-import org.gradle.internal.impldep.com.google.gson.JsonArray
-import org.gradle.internal.impldep.com.google.gson.JsonObject
+
+import com.google.gson.*;
 
 /**
  * The pattern that's used to take in the file id of the modrinth file,
