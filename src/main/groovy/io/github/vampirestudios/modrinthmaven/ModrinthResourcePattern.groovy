@@ -65,7 +65,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             return Optional.of(cache)
         }
 
-        def modJson = new InputStreamReader(new URL("https://api.modrinth.com/api/v1/mod/").openStream())
+        def modJson = new InputStreamReader(new URL("https://api.modrinth.com/api/v1/mod/$modId").openStream())
         println(modJson)
         if (modJson.isEmpty()) {
             throw new IllegalArgumentException("Mod ID is invalid. ModId: $modId")
