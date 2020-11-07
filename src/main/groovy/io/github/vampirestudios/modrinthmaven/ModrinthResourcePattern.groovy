@@ -67,9 +67,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
 
         def modJson = new InputStreamReader(new URL("https://api.modrinth.com/api/v1/mod/$modId").openStream())
         println(modJson)
-        if (modJson.isEmpty()) {
-            throw new IllegalArgumentException("Mod ID is invalid. ModId: $modId")
-        }
+        
         JsonObject modJsonObject = GSON.fromJson(modJson, JsonObject.class)
         JsonArray fileList = modJsonObject.getAsJsonArray("versions")
         boolean contains = false;
