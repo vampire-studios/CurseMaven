@@ -65,7 +65,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             return Optional.of(cache)
         }
 
-        def modJson = new URL("https://api.modrinth.com/api/v1/mod/").text
+        def modJson = new URL("https://api.modrinth.com/api/v1/mod/").content
         if (modJson.isEmpty()) {
             throw new IllegalArgumentException("Mod ID is invalid. ModId: $modId")
         }
@@ -82,7 +82,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             throw new IllegalArgumentException("Can't find Version ID in Version List of Mod ID. VersionId: $versionId, ModId: $modId")
         }
 
-        def fileJson = new URL("https://api.modrinth.com/api/v1/version/$versionId").text
+        def fileJson = new URL("https://api.modrinth.com/api/v1/version/$versionId").content
         JsonObject fileJsonObject = GSON.fromJson(fileJson, JsonObject.class)
         JsonObject fileInfo = fileJsonObject.getAsJsonArray("files").get(0) as JsonObject
         //Get the normal jar result. This should never be empty.
