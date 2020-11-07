@@ -34,7 +34,9 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     @Override
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
+        println("Oh?")
         if(attributes.get("organisation") == "modrinth.maven") {
+            println("Modrinth!")
             try {
                 Optional<String> result = getExtension(attributes.get("module"))
                 if(result.isPresent()) {
@@ -50,12 +52,11 @@ class ModrinthResourcePattern extends M2ResourcePattern {
 
     /**
      * Gets the suffix for {@link #DOWNLOAD_URL}. Used to resolve the URL maven patterns. NOTE: ANY EXCEPTION THROWN BY THIS WILL JUST BE CONSUMED
-     * @param artifactID the project slug if {@code group} is `modrinth.maven`, or the project id if it's `modrinth.maven.id`
-     * @param fileID the file id for the
-     * @param classifier the artifact classifier.
+     * @param versionId the project slug if {@code group} is `modrinth.maven`, or the project id if it's `modrinth.maven.id`
      * @return the extension for the given artifacts.
      */
     static Optional<String> getExtension(String versionId) {
+        println("Extension: $versionId")
 
         //Gets the cache key for this object. the classifier can be null, hence why Objects.toString is used.
         def cacheKey = versionId
@@ -103,6 +104,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
 //                return Optional.empty()
 //            }
 //        }
+        println("Result: $result")
 
         EXTENSION_CACHE.put(cacheKey, result)
         Optional.ofNullable(result)
