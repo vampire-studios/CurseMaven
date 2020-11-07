@@ -1,4 +1,4 @@
-package com.wynprice.cursemaven
+package io.github.vampirestudios.modrinthmaven
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -8,16 +8,15 @@ import org.gradle.api.internal.artifacts.repositories.DefaultMavenArtifactReposi
 import org.gradle.api.internal.artifacts.repositories.ResolutionAwareRepository
 import org.gradle.api.internal.artifacts.repositories.resolver.ExternalResourceResolver
 import org.gradle.api.internal.artifacts.repositories.resolver.ResourcePattern
-import org.gradle.internal.impldep.org.apache.http.impl.client.DefaultRedirectStrategy
 
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
 
 /**
  * The main plugin class
- * @author Wyn Price
+ * @author Wyn Price, Vampire Studio's
  */
-class CurseMavenPlugin implements Plugin<Project> {
+class ModrinthMavenPlugin implements Plugin<Project> {
 
     /**
      * The default variable slug that gets added to the project extension
@@ -30,7 +29,7 @@ class CurseMavenPlugin implements Plugin<Project> {
         //Create a new maven from the repository handler, then remove it, so I can delegate to it
         def repos = project.repositories as DefaultRepositoryHandler
         def newMaven = repos.maven {
-            url = "http://www.wynprice.com/dummycursemaven"
+            url = "http://www.modrinth.com/dummymaven"
             metadataSources {
                 artifact()
             }
@@ -55,7 +54,7 @@ class CurseMavenPlugin implements Plugin<Project> {
                 }.get(resolver) as List<ResourcePattern>
                 list.clear()
 
-                list.add(new CurseResourcePattern())
+                list.add(new ModrinthResourcePattern())
 
                 return resolver
             }
@@ -71,8 +70,6 @@ class CurseMavenPlugin implements Plugin<Project> {
             return method.invoke(newMaven, args)
         } as InvocationHandler) as ArtifactRepository
 
-        repos.addRepository(repo, "CURSE_DUMMY_REPO")
-
-        project.ext.set(VARIABLE_NAME, new CurseMavenResolver())
+        repos.addRepository(repo, "MODRINTH_DUMMY_REPO")
     }
 }
