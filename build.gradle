@@ -39,7 +39,7 @@ artifacts {
 
 gradlePlugin {
     plugins {
-        curseGradlePlugin {
+        modrinthMaven {
             id = 'io.github.vampirestudios.modrinthmaven'
             implementationClass = 'io.github.vampirestudios.modrinthmaven.ModrinthMavenPlugin'
         }
