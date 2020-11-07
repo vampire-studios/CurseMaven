@@ -35,6 +35,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
         println("Oh?")
+        println(attributes.entrySet().toString())
         if(attributes.get("organisation") == "modrinth.maven") {
             println("Modrinth!")
             try {
