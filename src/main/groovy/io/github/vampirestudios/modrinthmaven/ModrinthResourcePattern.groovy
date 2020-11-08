@@ -86,12 +86,12 @@ class ModrinthResourcePattern extends M2ResourcePattern {
         JsonObject fileJsonObject = GSON.fromJson(fileJson, JsonObject.class)
         JsonObject fileInfo = fileJsonObject.getAsJsonArray("files").get(0) as JsonObject
         //Get the normal jar result. This should never be empty.
-        def url = fileInfo.get("url").getAsString()
-        println(url)
-        def result = new URL(url).text
-        if(result.isEmpty()) {
-            throw new IllegalArgumentException("Version ID is invalid. VersionId: '$versionId'")
-        }
+        def result = fileInfo.get("url").getAsString()
+//        println(url)
+//        def result = new URL(url).text
+//        if(result.isEmpty()) {
+//            throw new IllegalArgumentException("Version ID is invalid. VersionId: '$versionId'")
+//        }
 
 //        //If we need to search for a classifier, then do so
 //        if(classifier != null) {
