@@ -18,7 +18,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
      */
     static final Map<String, String> EXTENSION_CACHE = new HashMap<>()
 
-    static final String DOWNLOAD_URL = "https://cdn.modrinth.com/data/"
+    static final String DOWNLOAD_URL = "https://cdn.modrinth.com"
 
     static final Gson GSON = new GsonBuilder().create()
 
@@ -38,7 +38,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             try {
                 Optional<String> result = getExtension(attributes.get("module"), attributes.get("revision"))
                 if(result.isPresent()) {
-                    return result.get()
+                    return result.get().replace("https://cdn.modrinth.com", "")
                 }
             } catch(Exception e) {
                 println e.message
