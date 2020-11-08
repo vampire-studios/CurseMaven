@@ -34,9 +34,10 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     @Override
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
-        if(attributes.get("organisation") == "modrinth.maven") {
+        def matcher = attributes.get("revision") =~ /^\d+/
+        if(attributes.get("organisation") == "modrinth.maven" && matcher.find()) {
             try {
-                Optional<String> result = getExtension(attributes.get("module"), attributes.get("revision"))
+                Optional<String> result = getExtension(attributes.get("module"), matcher.group(0))
                 if(result.isPresent()) {
                     return result.get().replace("https://cdn.modrinth.com", "")
                 }
@@ -83,7 +84,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
         def fileJson = new InputStreamReader(new URL("https://api.modrinth.com/api/v1/version/$versionId").openStream())
         JsonObject fileJsonObject = GSON.fromJson(fileJson, JsonObject.class)
         JsonObject fileInfo = fileJsonObject.getAsJsonArray("files").get(0) as JsonObject
-        
+
         def result = fileInfo.get("url").getAsString()
 
         EXTENSION_CACHE.put(cacheKey, result)
