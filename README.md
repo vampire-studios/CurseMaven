@@ -4,7 +4,7 @@ Gradle plugin to allow easy access to modrinth files for your project.
 It is based on [CurseMaven](https://github.com/Wyn-Price/CurseMaven) plugin.
 
 # Applying the plugin
-To see latest version, look [here](https://jitpack.io/#vampire-studios/ModrinthMaven)
+Latest version: [![](https://jitpack.io/v/vampire-studios/ModrinthMaven.svg)](https://jitpack.io/#vampire-studios/ModrinthMaven)
 
 First, add jitpack.io to your plugin repositories:
 ```gradle
