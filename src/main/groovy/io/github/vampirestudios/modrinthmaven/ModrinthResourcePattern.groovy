@@ -78,7 +78,7 @@ class ModrinthResourcePattern extends M2ResourcePattern {
             }
         })
 
-        if (!contains && !versionId.contains("@")) {
+        if (!contains) {
             throw new IllegalArgumentException("Can't find Version ID in Version List of Mod ID. VersionId: $versionId, ModId: $modId")
         }
 
