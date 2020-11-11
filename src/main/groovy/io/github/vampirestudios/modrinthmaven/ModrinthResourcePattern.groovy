@@ -34,12 +34,13 @@ class ModrinthResourcePattern extends M2ResourcePattern {
     @Override
     protected String substituteTokens(String pattern, Map<String, String> attributes) {
         //If the organization is equal to `modrinth.`maven, then try and resolve it.
-        def matcher = attributes.get("revision") =~ /^\d+/
-        if(attributes.get("organisation") == "modrinth.maven" && matcher.find()) {
+        def modIdMatcher = attributes.get("module") =~ /^[a-zA-Z0-9]+/
+        def versionIdMatcher = attributes.get("revision") =~ /^[a-zA-Z0-9]+/
+        if(attributes.get("organisation") == "modrinth.maven" && versionIdMatcher.find() && modIdMatcher.find()) {
             try {
-                Optional<String> result = getExtension(attributes.get("module"), matcher.group(0))
+                Optional<String> result = getExtension(modIdMatcher.group(0), versionIdMatcher.group(0))
                 if(result.isPresent()) {
-                    return result.get().replace("https://cdn.modrinth.com", "")
+                    return result.get().replace(DOWNLOAD_URL, "")
                 }
             } catch(Exception e) {
                 println e.message
